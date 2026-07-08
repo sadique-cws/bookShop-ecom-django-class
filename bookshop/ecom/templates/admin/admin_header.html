@@ -1,0 +1,26 @@
+<header class="sticky top-0 z-50 bg-gray-900 shadow-sm border-b border-gray-800">
+    <div class="flex items-center justify-between px-6 lg:px-12 py-3 max-w-[1400px] mx-auto">
+        <h1 class="text-xl text-white font-semibold tracking-tight">
+            BookShop <span class="text-rose-500 font-bold ml-1">Admin</span>
+        </h1>
+
+        <nav class="flex items-center gap-1">
+            <span class="text-gray-300 px-3 py-1.5 rounded text-sm font-medium transition-colors">
+                {% if request.user.first_name %}
+                    {{request.user.first_name}}
+                {% else %}
+                    {{request.user.username}}
+                {% endif %}
+            </span>
+            <a href="{% url 'logout' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors">Logout</a>
+    </div>
+</header>
+<div class="bg-gray-800 shadow-sm">
+    <div class="flex items-center gap-1 px-6 lg:px-12 py-2 max-w-[1400px] mx-auto overflow-x-auto">
+        <a href="{% url 'admin_dashboard' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap">Dashboard</a>
+        <a href="{% url 'insert_genre' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap">Add Genre</a>
+        <a href="{% url 'insert_book' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap">Add Book</a>
+        <a href="{% url 'manage_genre' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap">Manage Genres</a>
+        <a href="{% url 'manage_books' %}" class="text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap">Manage Books</a>
+    </div>
+</div>
