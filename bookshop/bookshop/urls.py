@@ -11,6 +11,8 @@ urlpatterns = [
     # public urls
     path('', views.homepage, name="homepage"),
     path('/add-to-cart/<int:book_id>/', views.addToCart, name="addToCart"),
+    path('/apply-coupon/', views.applyCoupon, name="applyCoupon"),
+    path('/remove-coupon/<int:order_id>/', views.removeCoupon, name="removeCoupon"),
     path('/remove-from-cart/<int:book_id>/', views.removeFromCart, name="removeFromCart"),
     path('accounts/login/', views.login, name="login"),
     path('accounts/logout/', views.logout, name="logout"),

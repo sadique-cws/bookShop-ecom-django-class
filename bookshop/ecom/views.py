@@ -149,3 +149,36 @@ def removeFromCart(req, book_id):
         
     except Book.DoesNotExist:
         return redirect("cart")  # Redirect to cart if book not found
+    
+    
+    
+@login_required()
+def applyCoupon(req):
+    if req.method == "POST":
+        code = req.POST.get("code")
+        try:
+            checkCoupon = Coupon.objects.get(code=code)
+            
+            # now applying coupon
+            order = Order.objects.filter(user_id=req.user, is_ordered=False).first()
+            order.coupon_id = checkCoupon
+            order.save()
+            return redirect(cart)
+        
+        except Coupon.DoesNotExist:
+            return redirect(cart) 
+    
+
+@login_required()
+def removeCoupon(req, order_id):
+    try:
+        order = Order.objects.get(user_id=req.user, is_ordered=False, id=order_id)
+        
+        if order:
+            order.coupon_id = None 
+            order.save()
+            return redirect(cart)
+        
+        
+    except Order.DoesNotExist:
+        return redirect(cart)

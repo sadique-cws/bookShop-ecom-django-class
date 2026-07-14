@@ -49,6 +49,32 @@ class Order(models.Model):
     coupon_id = models.ForeignKey(Coupon, on_delete=models.CASCADE,null=True, blank=True)
     address_id = models.ForeignKey(Address, on_delete=models.CASCADE,null=True, blank=True)
     is_ordered = models.BooleanField(default=False)
+    
+    
+    def getSubTotal(self):
+        total = 0
+        for item in self.orderitem_set.all():
+            total += item.getItemPrice()
+        return total
+    
+    def getTotalTax(self):
+        return round(0.18 * self.getSubTotal())
+    
+    def getShippingCharge(self):
+        if self.getSubTotal() < 500:
+            return 60
+        else:
+            return 0
+    def getCouponDiscount(self):
+        if self.coupon_id:
+            return self.coupon_id.discount
+        else: 
+            return 0
+    
+    def getPayableAmount(self):
+        return (self.getSubTotal() + self.getTotalTax() + self.getShippingCharge()) - self.getCouponDiscount()
+            
+    
   
 class OrderItem(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -56,5 +82,9 @@ class OrderItem(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     qty = models.IntegerField(default=1)
     is_ordered = models.BooleanField(default=False)
+    
+    
+    def getItemPrice(self):
+        return self.qty * self.book_id.price
     
     
