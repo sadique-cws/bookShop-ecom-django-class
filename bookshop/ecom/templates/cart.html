@@ -109,13 +109,13 @@
                             {% endif %}
                         </span>
                     </div>
-                    <div class="border-t border-gray-200 pt-4 flex justify-between text-base font-bold text-gray-900">
+                    <div class="border-t border-gray-200 text-center pt-4 flex justify-between text-base font-bold text-gray-900">
                         <span>Total</span>
                         <span class="text-rose-600">₹{{order.getPayableAmount}}</span>
                     </div>
-                    <button class="w-full mt-4 bg-gray-900 text-white py-2.5 rounded font-medium hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed" {% if not order_items %}disabled{% endif %}>
+                    <a href="{% url 'checkout' %}" class="w-full text-center mt-4 bg-gray-900 text-white py-2.5 rounded font-medium hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed" {% if not order_items %}disabled{% endif %}>
                         Proceed to Checkout
-                    </button>
+                    </a>
                     
                     <div class="mt-4 text-xs text-gray-500 text-center">
                         <p>Taxes will be calculated at checkout if applicable.</p>

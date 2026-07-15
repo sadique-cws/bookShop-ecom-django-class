@@ -32,17 +32,19 @@ class Coupon(models.Model):
         return self.code
     
 class Address(models.Model):
+    CITY = (("Purnea","Purnea"), ("Patna","Patna"))
+    STATE  = (("Bihar", "Bihar"),)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     street = models.CharField(max_length=200)
     fullname = models.CharField(max_length=200)
     contact = models.CharField(max_length=20)
     area = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
-    state = models.CharField(max_length=200)
+    city = models.CharField(max_length=200, choices=CITY)
+    state = models.CharField(max_length=200, choices=STATE)
     pincode = models.CharField(max_length=200)
     
     def __str__(self):
-        return self.user_id.username
+        return self.fullname
   
 class Order(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

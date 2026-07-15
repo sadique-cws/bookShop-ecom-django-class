@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth.decorators import login_required
+from ecom.forms import AddressCheckoutForm
 # Create your views here.
 def homepage(req):
     data = {
@@ -182,3 +183,24 @@ def removeCoupon(req, order_id):
         
     except Order.DoesNotExist:
         return redirect(cart)
+    
+    
+
+def checkout(req):
+    form = AddressCheckoutForm(req.POST or None)
+    order = Order.objects.filter(user_id=req.user, is_ordered=False).first()
+    addresses = Address.objects.filter(user_id=req.user)
+    
+    
+    if req.method == "POST":
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.user_id = req.user
+            data.save()
+            
+            # update address id in order 
+            order.address_id = data
+            order.save()
+            return redirect(checkout)
+
+    return render(req, "checkout.html", {"form":form,"order":order,"addresses":addresses})

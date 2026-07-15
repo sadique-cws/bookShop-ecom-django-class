@@ -21,6 +21,7 @@ urlpatterns = [
     path('genre/filter/<int:genre_id>/', views.filterByGenre, name="filterByGenre"),
     path('book/<int:book_id>/', views.bookDetails, name="bookDetails"),
     path('cart/', views.cart, name="cart"),
+    path('checkout/', views.checkout, name="checkout"),
     
     # admin urls
     path('admin/', admin.site.urls),
