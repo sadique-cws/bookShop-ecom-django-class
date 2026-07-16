@@ -192,15 +192,24 @@ def checkout(req):
     addresses = Address.objects.filter(user_id=req.user)
     
     
-    if req.method == "POST":
-        if form.is_valid():
-            data = form.save(commit=False)
-            data.user_id = req.user
-            data.save()
-            
-            # update address id in order 
-            order.address_id = data
-            order.save()
-            return redirect(checkout)
+    if req.POST.get("address_id"):
+        try:
+            address = Address.objects.get(id=req.POST.get("address_id"))
+        except Address.DoesNotExist:
+            print("not found saved address")
+        order.address_id = address
+        order.save()
+        return redirect(checkout)
+    else:
+        if req.method == "POST":
+            if form.is_valid():
+                data = form.save(commit=False)
+                data.user_id = req.user
+                data.save()
+                
+                # update address id in order 
+                order.address_id = data
+                order.save()
+                return redirect(checkout)
 
     return render(req, "checkout.html", {"form":form,"order":order,"addresses":addresses})

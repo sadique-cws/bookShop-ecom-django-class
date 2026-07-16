@@ -1,126 +1,296 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-{% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BookShop - Checkout Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="//unpkg.com/alpinejs" defer></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb;
+      }
+      .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
 
-        form p{
-            display:flex;
-            flex-direction:column;
-            margin-top: 10px;
-        }
+      form p {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+      }
 
-        form p input, form p select{
-            border:1px solid #eee;
-            border-radius:5px;
-            padding:10px 5px;
-        }
-    
+      form p input,
+      form p select {
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 10px 5px;
+      }
     </style>
-</head>
-<body class="min-h-screen flex flex-col selection:bg-rose-100 selection:text-rose-900">
-
+  </head>
+  <body x-data="{open:true}"
+    class="min-h-screen flex flex-col selection:bg-rose-100 selection:text-rose-900"
+  >
     {% include "header.html" %}
 
-    <div class="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1">
-        
-        <!-- Main Content (Cart Items) -->
-        <main class="w-full lg:w-3/4 xl:w-4/5 flex flex-col gap-6">
-            <h2 class="text-2xl font-bold text-gray-900">Checkout</h2>
+    <div
+      class="max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 lg:py-10 flex flex-col lg:flex-row gap-6 lg:gap-8 flex-1"
+    >
+      <!-- Main Content (Cart Items) -->
+      <main class="w-full lg:w-3/4 xl:w-4/5 flex flex-col gap-6">
+        <h2 class="text-2xl font-bold text-gray-900">Checkout</h2>
 
-           <form action="" method="post">
-             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <h2>Saved Address</h2>
-                <hr/>
-                {% for address in addresses  %}
-                    
-                    <label >
-                    <input type="radio" name="address_id" class="hidden peer" value="{{address.id}}" id="">
-                        <div class="bg-white border rounded-lg peer-checked:bg-red-200 peer-checked:border-red-700">
-                        <h2>{{address.fullname}}</h2>
-                        <h2>{{address.contact}}</h2>
-                        <h2>{{address.street}}</h2>
-                        <h2>{{address.city}}</h2>
-                        <h2>{{address.state}}</h2>
-                        <h2>{{address.pincode}}</h2>
-                        <h2>{{address.area}}</h2>
-                        </div>
-                    </label>
-                {% endfor %}
+        <form action="" method="post" id="select-address-form">
+          <div
+            class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden p-5 sm:p-6 mb-6"
+          >
+            <div class="flex items-center justify-between mb-5">
+              <h2
+                class="text-xl font-bold text-gray-900 flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-rose-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <p x-show="!open">Saved Addresses</p>
+                <p x-show="open">Insert Address </p>
+              </h2>
+              <a href="#" class="bg-rose-600 text-white px-3 py-2 rounded" @click.prevent="open = true" x-show="!open">Add New Address</a>
+              <a href="#" class="bg-slate-600 text-white px-3 py-2 rounded" @click.prevent="open = false" x-show="open">Show Saved Addresses</a>
             </div>
-           </form>
-            
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <form action="" method="post" class="p-5">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <div class="mb-3">
-                        <input type="submit" value="Proceed to Pay" class="bg-rose-600 text-white w-full px-3 py-2 rounded">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-show="!open">
+              {% for address in addresses %}
+              <label class="cursor-pointer relative block h-full" @click="open = false">
+                <input
+                  type="radio"
+                  name="address_id"
+                  class="peer sr-only"
+                  value="{{address.id}}"
+                  required
+                />
+                <div
+                  class="bg-white border-2 border-gray-100 rounded-xl p-5 hover:border-rose-300 transition-all duration-200 peer-checked:border-rose-600 peer-checked:bg-rose-50/50 peer-checked:shadow-sm h-full flex flex-col relative group"
+                >
+                  <!-- Check Icon for selected state -->
+                  <div
+                    class="absolute top-4 right-4 text-rose-600 opacity-0 peer-checked:opacity-100 transition-opacity transform scale-50 peer-checked:scale-100 duration-200"
+                  >
+                    <div class="bg-rose-100 rounded-full p-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
                     </div>
-                </form>
-            </div>
-        </main>
+                  </div>
 
-        <!-- Sidebar (Order Summary) -->
-        <aside class="w-full lg:w-1/4 xl:w-1/5 shrink-0">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
-                <div class="p-4 bg-gray-50 border-b border-gray-200">
-                    <h3 class="text-base font-semibold text-gray-900">
-                        Order Summary
+                  <div class="flex items-center gap-3 mb-3">
+                    <h3 class="font-bold text-gray-900 text-lg">
+                      {{address.fullname}}
                     </h3>
-                </div>
-                <div class="p-4 flex flex-col gap-4">
-                    <div class="flex justify-between text-sm text-gray-600">
-                        <span>Subtotal</span>
-                        <span class="font-medium text-gray-900">₹{{order.getSubTotal}}</span>
-                    </div>
-                   
-                    {% if order.coupon_id %}
-                     <div class="flex justify-between text-sm text-green-600">
-                        <span>Coupon Discount</span>
-                        <span class="font-medium text-green-600">-₹{{order.getCouponDiscount}}</span>
-                    </div>
-                    {% endif %}
-                    <div class="flex justify-between text-sm text-gray-600">
-                        <span>TAX (GST 18%)</span>
-                        <span class="font-medium text-gray-900">₹{{order.getTotalTax}}</span>
-                    </div>
-                    <div class="flex justify-between text-sm text-gray-600">
-                        <span>Shipping</span>
-                        <span class="font-medium text-gray-900">
-                            {% if not order.getShippingCharge %}
-                                    Free
-                            {% else %}
-                                    {{order.getShippingCharge}}
-                            {% endif %}
-                        </span>
-                    </div>
-                    <div class="border-t border-gray-200 pt-4 flex justify-between text-base font-bold text-gray-900">
-                        <span>Total</span>
-                        <span class="text-rose-600">₹{{order.getPayableAmount}}</span>
-                    </div>
-                    <button class="w-full mt-4 bg-gray-900 text-white py-2.5 rounded font-medium hover:bg-gray-800 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
-                        Pay Now
-                    </button>
-                    
-                    <div class="mt-4 text-xs text-gray-500 text-center">
-                        <p>Taxes will be calculated at checkout if applicable.</p>
-                    </div>
-                </div>
+                  </div>
 
+                  <div
+                    class="text-gray-600 text-sm leading-relaxed mb-4 flex-1 space-y-1"
+                  >
+                    <p class="flex items-start gap-2">
+                      <span
+                        class="mt-0.5 text-gray-400 group-hover:text-gray-500 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                          />
+                        </svg>
+                      </span>
+                      <span>{{address.street}}, {{address.area}}</span>
+                    </p>
+                    <p class="pl-6">
+                      {{address.city}}, {{address.state}}
+                      <span class="font-medium text-gray-800 ml-1"
+                        >{{address.pincode}}</span
+                      >
+                    </p>
+                  </div>
 
+                  <div
+                    class="text-gray-700 font-medium text-sm pt-3 border-t border-gray-100 peer-checked:border-rose-200 flex items-center gap-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-gray-400 peer-checked:text-rose-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      />
+                    </svg>
+                    {{address.contact}}
+                  </div>
+                </div>
+              </label>
+              {% empty %}
+              <div
+                class="col-span-full py-10 px-4 text-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200"
+              >
+                <div
+                  class="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-8 w-8 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">
+                  No addresses saved
+                </h3>
+                <p class="text-gray-500 text-sm">
+                  Please add a new address below to proceed with checkout.
+                </p>
+              </div>
+              {% endfor %}
             </div>
-        </aside>
+          </div>
 
+          <div
+            class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            {% csrf_token %} 
+            
+            <div x-show="open" class="p-5">
+            {{form.as_p}}
+            </div>
+            <div class="mb-3">
+              <input
+                type="submit"
+                value="Proceed to Pay"
+                class="bg-rose-600 text-white w-full px-3 py-2 rounded"
+              />
+            </div>
+          </div>
+        </form>
+      </main>
+
+      <!-- Sidebar (Order Summary) -->
+      <aside class="w-full lg:w-1/4 xl:w-1/5 shrink-0">
+        <div
+          class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24"
+        >
+          <div class="p-4 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-base font-semibold text-gray-900">Order Summary</h3>
+          </div>
+          <div class="p-4 flex flex-col gap-4">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Subtotal</span>
+              <span class="font-medium text-gray-900"
+                >₹{{order.getSubTotal}}</span
+              >
+            </div>
+
+            {% if order.coupon_id %}
+            <div class="flex justify-between text-sm text-green-600">
+              <span>Coupon Discount</span>
+              <span class="font-medium text-green-600"
+                >-₹{{order.getCouponDiscount}}</span
+              >
+            </div>
+            {% endif %}
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>TAX (GST 18%)</span>
+              <span class="font-medium text-gray-900"
+                >₹{{order.getTotalTax}}</span
+              >
+            </div>
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Shipping</span>
+              <span class="font-medium text-gray-900">
+                {% if not order.getShippingCharge %} Free {% else %}
+                {{order.getShippingCharge}} {% endif %}
+              </span>
+            </div>
+            <div
+              class="border-t border-gray-200 pt-4 flex justify-between text-base font-bold text-gray-900"
+            >
+              <span>Total</span>
+              <span class="text-rose-600">₹{{order.getPayableAmount}}</span>
+            </div>
+           
+
+            <div class="mt-4 text-xs text-gray-500 text-center">
+              <p>Taxes will be calculated at checkout if applicable.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
     </div>
-</body>
+  </body>
 </html>
